@@ -28,6 +28,7 @@ class LoggedInActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loggedin)
+        supportActionBar?.hide()
 
         spotifyname_textview.text = spotifyDisplayName
 
