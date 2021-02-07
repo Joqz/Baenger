@@ -9,11 +9,12 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/spotify_login_btn"
-        android:layout_width="187dp"
+        android:layout_width="200dp"
         android:layout_height="47dp"
         android:layout_centerInParent="true"
         android:background="@drawable/loginbutton"
         android:drawablePadding="8dp"
+        android:fontFamily="sans-serif"
         android:padding="8dp"
         android:text="@string/log_in_with_spotify"
         android:textAllCaps="false"
@@ -23,7 +24,22 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612"
-        />
+        app:layout_constraintVertical_bias="0.612" />
+
+    <TextView
+        android:id="@+id/logo_textview"
+        android:layout_width="200dp"
+        android:layout_height="71dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/nunito"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/yellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.366" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
