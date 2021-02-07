@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Baenger</string>
     <string name="log_in_with_spotify">LOG IN WITH SPOTIFY</string>
+    <string name="create_playlist">CREATE A PLAYLIST</string>
+    <string name="create_playlist_info">We need to create a playlist for your Spotify account so that you can start baenging those songs.</string>
 </resources>
