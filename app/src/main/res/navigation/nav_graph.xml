@@ -12,9 +12,7 @@
         tools:layout="@layout/activity_main" >
         <action
             android:id="@+id/action_mainActivity_to_loggedInActivity"
-            app:destination="@id/loggedInActivity"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:destination="@id/loggedInActivity" />
     </activity>
     <activity
         android:id="@+id/loggedInActivity"

@@ -34,8 +34,8 @@
 
     <TextView
         android:id="@+id/logo_textview"
-        android:layout_width="250dp"
-        android:layout_height="85dp"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/nunito"
         android:gravity="center"
