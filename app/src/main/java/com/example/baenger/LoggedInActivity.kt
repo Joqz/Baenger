@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.OutputStream
 import java.net.URL
@@ -35,34 +36,71 @@ class LoggedInActivity : AppCompatActivity() {
     }
 
     private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
+
+        var playlistCheck = false;
+        var baengerFound = true;
+
         Log.d("Status: ", "Please Wait...")
         if (spotifyAccessToken == null) {
             Log.i("Status: ", "Something went wrong - No Access Token found")
             return
         }
 
-        val getplaylistURL = "https://api.spotify.com/v1/users/" + spotifyId + "/playlists"
+        val checkforplaylistsURL = "https://api.spotify.com/v1/me/playlists"
 
         GlobalScope.launch(Dispatchers.Default) {
-            val url = URL(getplaylistURL)
+            val url = URL(checkforplaylistsURL + "?limit=50&offset=0")
             val httpsURLConnection = withContext(Dispatchers.IO) {url.openConnection() as HttpsURLConnection }
-            httpsURLConnection.requestMethod = "POST"
+            httpsURLConnection.requestMethod = "GET"
             httpsURLConnection.setRequestProperty("Authorization", "Bearer $spotifyAccessToken")
             httpsURLConnection.setRequestProperty("Accept", "application/json")
             httpsURLConnection.setRequestProperty("Content-Type", "application/json")
             httpsURLConnection.doInput = true
-            httpsURLConnection.doOutput = true
-
-            val requestJson = JSONObject("""{"name":"Baenger", "description":"Playlist for Baenger","public":"false"}""")
-
-            val os: OutputStream = httpsURLConnection.getOutputStream()
-            os.write(requestJson.toString().toByteArray())
-            os.close()
+            httpsURLConnection.doOutput = false
 
             val response = httpsURLConnection.inputStream.bufferedReader()
-                .use { it.readText() }  // defaults to UTF-8
+                    .use { it.readText() }  // defaults to UTF-8
             withContext(Dispatchers.Main) {
-                val jsonObject = JSONObject(response)
+                val jsonArray = JSONObject(response).get("items") as JSONArray
+
+                for (i in 0..(jsonArray.length() - 1)) {
+                    val item = jsonArray[i] as JSONObject
+                    val playlistName = item.getString("name")
+                    Log.i("Names: ", playlistName)
+
+                    if (playlistName == "Baenger"){
+                        baengerFound = true;
+                        Log.i("Status: ", "BAENGER PLAYLIST FOUND, NOTHING SHOULD HAPPEN")
+                    }
+                }
+                playlistCheck = true;
+            }
+        }
+
+        if(playlistCheck && !baengerFound){
+            val getplaylistURL = "https://api.spotify.com/v1/users/" + spotifyId + "/playlists"
+
+            GlobalScope.launch(Dispatchers.Default) {
+                val url = URL(getplaylistURL)
+                val httpsURLConnection = withContext(Dispatchers.IO) {url.openConnection() as HttpsURLConnection }
+                httpsURLConnection.requestMethod = "POST"
+                httpsURLConnection.setRequestProperty("Authorization", "Bearer $spotifyAccessToken")
+                httpsURLConnection.setRequestProperty("Accept", "application/json")
+                httpsURLConnection.setRequestProperty("Content-Type", "application/json")
+                httpsURLConnection.doInput = true
+                httpsURLConnection.doOutput = true
+
+                val requestJson = JSONObject("""{"name":"Baenger", "description":"Playlist for Baenger","public":"true"}""")
+
+                val os: OutputStream = httpsURLConnection.getOutputStream()
+                os.write(requestJson.toString().toByteArray())
+                os.close()
+
+                val response = httpsURLConnection.inputStream.bufferedReader()
+                        .use { it.readText() }  // defaults to UTF-8
+                withContext(Dispatchers.Main) {
+                    val jsonObject = JSONObject(response)
+                }
             }
         }
     }
