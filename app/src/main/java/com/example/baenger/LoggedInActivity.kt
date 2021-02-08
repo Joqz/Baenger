@@ -1,10 +1,9 @@
 package com.example.baenger
 
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.spotify.sdk.android.authentication.AuthenticationClient
-import com.spotify.sdk.android.authentication.AuthenticationResponse
 import kotlinx.android.synthetic.main.activity_loggedin.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -15,17 +14,31 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.OutputStream
 import java.net.URL
+import java.security.Key
+import java.security.KeyStore
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
 import javax.net.ssl.HttpsURLConnection
 
 
 class LoggedInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val keystore = KeyStore.getInstance("AndroidKeyStore")
+        keystore.load(null)
+
         val spotifyId = intent.getStringExtra("spotify_id")
         val spotifyDisplayName = intent.getStringExtra("spotify_display_name")
         val spotifyEmail = intent.getStringExtra("spotify_email")
         val spotifyAvatarURL = intent.getStringExtra("spotify_avatar")
         val spotifyAccessToken = intent.getStringExtra("spotify_access_token")
+
+        val key: Key = keystore.getKey("SpotifyToken", null)
+        val stringKey = Base64.encodeToString(key.encoded, Base64.DEFAULT)
+
+        Log.d("FROM KEYSTORE:", stringKey)
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loggedin)
