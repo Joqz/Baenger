@@ -4,24 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/spotify_login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="47dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/rounded_corners"
+        android:background="@drawable/loginbutton"
         android:drawablePadding="8dp"
-        android:drawableStart="@drawable/spotify_icon"
-        android:drawableLeft="@drawable/spotify_icon"
+        android:fontFamily="sans-serif"
         android:padding="8dp"
-        android:text="Log in with Spotify"
+        android:text="@string/log_in_with_spotify"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.612" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:background="@drawable/gradient_background"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/logo_textview"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/nunito"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/yellow"
+        android:shadowColor="@color/middle_yellow"
+        android:shadowRadius="10"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.257" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
