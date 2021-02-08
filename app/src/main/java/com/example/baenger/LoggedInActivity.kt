@@ -33,13 +33,13 @@ class LoggedInActivity : AppCompatActivity() {
 
         spotifyname_textview.text = spotifyDisplayName
 
-        spotify_create_playlist.setOnClickListener {createPlaylist(spotifyAccessToken, spotifyId)}
+        spotify_create_playlist.setOnClickListener {checkForPlaylist(spotifyAccessToken, spotifyId)}
     }
 
-    private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
+    private fun checkForPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
 
         var playlistCheck = false;
-        var baengerFound = true;
+        var baengerFound = false;
 
         Log.d("Status: ", "Please Wait...")
         if (spotifyAccessToken == null) {
@@ -75,33 +75,39 @@ class LoggedInActivity : AppCompatActivity() {
                     }
                 }
                 playlistCheck = true;
+
+                if(playlistCheck && !baengerFound){
+                    createPlaylist(spotifyAccessToken, spotifyId)
+                }
             }
         }
 
-        if(playlistCheck && !baengerFound){
-            val getplaylistURL = "https://api.spotify.com/v1/users/" + spotifyId + "/playlists"
+    }
 
-            GlobalScope.launch(Dispatchers.Default) {
-                val url = URL(getplaylistURL)
-                val httpsURLConnection = withContext(Dispatchers.IO) {url.openConnection() as HttpsURLConnection }
-                httpsURLConnection.requestMethod = "POST"
-                httpsURLConnection.setRequestProperty("Authorization", "Bearer $spotifyAccessToken")
-                httpsURLConnection.setRequestProperty("Accept", "application/json")
-                httpsURLConnection.setRequestProperty("Content-Type", "application/json")
-                httpsURLConnection.doInput = true
-                httpsURLConnection.doOutput = true
+    private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
 
-                val requestJson = JSONObject("""{"name":"Baenger", "description":"Playlist for Baenger","public":"true"}""")
+        val getplaylistURL = "https://api.spotify.com/v1/users/" + spotifyId + "/playlists"
 
-                val os: OutputStream = httpsURLConnection.getOutputStream()
-                os.write(requestJson.toString().toByteArray())
-                os.close()
+        GlobalScope.launch(Dispatchers.Default) {
+            val url = URL(getplaylistURL)
+            val httpsURLConnection = withContext(Dispatchers.IO) { url.openConnection() as HttpsURLConnection }
+            httpsURLConnection.requestMethod = "POST"
+            httpsURLConnection.setRequestProperty("Authorization", "Bearer $spotifyAccessToken")
+            httpsURLConnection.setRequestProperty("Accept", "application/json")
+            httpsURLConnection.setRequestProperty("Content-Type", "application/json")
+            httpsURLConnection.doInput = true
+            httpsURLConnection.doOutput = true
 
-                val response = httpsURLConnection.inputStream.bufferedReader()
-                        .use { it.readText() }  // defaults to UTF-8
-                withContext(Dispatchers.Main) {
-                    val jsonObject = JSONObject(response)
-                }
+            val requestJson = JSONObject("""{"name":"Baenger", "description":"Playlist for Baenger","public":"true"}""")
+
+            val os: OutputStream = httpsURLConnection.getOutputStream()
+            os.write(requestJson.toString().toByteArray())
+            os.close()
+
+            val response = httpsURLConnection.inputStream.bufferedReader()
+                    .use { it.readText() }  // defaults to UTF-8
+            withContext(Dispatchers.Main) {
+                val jsonObject = JSONObject(response)
             }
         }
     }
