@@ -1,9 +1,9 @@
 package com.example.baenger
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,12 +30,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
+        val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+        val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
+        if (preferencesToken != null) {
+            fetchSpotifyUserProfile(preferencesToken)
+        }
+        
         spotify_login_btn.setOnClickListener {
             val request = getAuthenticationRequest(AuthenticationResponse.Type.TOKEN)
             AuthenticationClient.openLoginActivity(
-                this,
-                SpotifyConstants.AUTH_TOKEN_REQUEST_CODE,
-                request
+                    this,
+                    SpotifyConstants.AUTH_TOKEN_REQUEST_CODE,
+                    request
             )
         }
 
@@ -104,6 +111,11 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d("Spotify AccessToken :", token)
                 accessToken = token
+
+                val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("SpotifyToken", token)
+                editor.apply()
 
                 openLoggedInActivity()
             }

@@ -3,8 +3,6 @@ package com.example.baenger
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.spotify.sdk.android.authentication.AuthenticationClient
-import com.spotify.sdk.android.authentication.AuthenticationResponse
 import kotlinx.android.synthetic.main.activity_loggedin.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +24,16 @@ class LoggedInActivity : AppCompatActivity() {
         val spotifyEmail = intent.getStringExtra("spotify_email")
         val spotifyAvatarURL = intent.getStringExtra("spotify_avatar")
         val spotifyAccessToken = intent.getStringExtra("spotify_access_token")
+
+        val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+        val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
+
+        if (spotifyAccessToken != null) {
+            Log.d("Spotify AccessToken :", spotifyAccessToken)
+        }
+        if (preferencesToken != null) {
+            Log.d("PREFERENCES AccessToken :", preferencesToken)
+        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loggedin)
