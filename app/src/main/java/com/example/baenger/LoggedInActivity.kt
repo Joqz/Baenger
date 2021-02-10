@@ -2,6 +2,7 @@ package com.example.baenger
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -34,18 +35,14 @@ class LoggedInActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
         val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
 
-        if (spotifyAccessToken != null) {
-            Log.d("Spotify AccessToken :", spotifyAccessToken)
-        }
-        if (preferencesToken != null) {
-            Log.d("PREFERENCES AccessToken :", preferencesToken)
-        }
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loggedin)
         supportActionBar?.hide()
 
         spotifyname_textview.text = spotifyDisplayName
+
+
+        spotify_change_song.setOnClickListener{changeSong()}
 
 
         var playlistCheck = false;
@@ -92,6 +89,12 @@ class LoggedInActivity : AppCompatActivity() {
                 if(playlistCheck && !baengerFound){
                     //CHANGE ACTIVITY HERE!!
                 }
+                if(playlistCheck && baengerFound){
+
+                    //unnecessary check later on, just for testing rn
+                    connectToSpotify()
+                }
+
             }
         }
 
@@ -100,8 +103,7 @@ class LoggedInActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun connectToSpotify() {
 
         val connectionParams = ConnectionParams.Builder(SpotifyConstants.CLIENT_ID)
             .setRedirectUri(SpotifyConstants.REDIRECT_URI)
@@ -141,12 +143,16 @@ class LoggedInActivity : AppCompatActivity() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         spotifyAppRemote?.let {
             SpotifyAppRemote.disconnect(it)
         }
         // Aaand we will finish off here.
+    }
+
+    private fun changeSong() {
+        spotifyAppRemote?.playerApi?.skipNext()
     }
 
     private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
