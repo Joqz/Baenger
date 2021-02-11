@@ -7,6 +7,18 @@
     android:background="@color/black"
     tools:context=".SearchActivity">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/yellow"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:menu="@menu/nav_menu" />
+
+
     <TextView
         android:id="@+id/spotifyname_textview"
         android:layout_width="wrap_content"
@@ -24,7 +36,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:background="@drawable/gradient_background"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

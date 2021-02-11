@@ -21,10 +21,15 @@ import javax.net.ssl.HttpsURLConnection
 class SearchActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val spotifyId = intent.getStringExtra("spotify_id")
+        val spotifyDisplayName = intent.getStringExtra("spotify_display_name")
+        val spotifyEmail = intent.getStringExtra("spotify_email")
+        val spotifyAvatarURL = intent.getStringExtra("spotify_avatar")
+        val spotifyAccessToken = intent.getStringExtra("spotify_access_token")
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         supportActionBar?.hide()
-
 
         spotifyname_textview.text = spotifyDisplayName
     }
