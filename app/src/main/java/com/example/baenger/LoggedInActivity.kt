@@ -1,5 +1,6 @@
 package com.example.baenger
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -78,6 +79,7 @@ class LoggedInActivity : AppCompatActivity() {
                     if (playlistName == "Baenger"){
                         baengerFound = true;
                         playlistID = item.getString("id")
+                        openSearchActivity()
                         Log.i("Status: ", "BAENGER PLAYLIST FOUND, NOTHING SHOULD HAPPEN")
                     }
                 }
@@ -176,5 +178,9 @@ class LoggedInActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(response)
             }
         }
+    }
+    private fun openSearchActivity() {
+        val myIntent = Intent(this@LoggedInActivity, SearchActivity::class.java)
+        startActivity(myIntent)
     }
 }
