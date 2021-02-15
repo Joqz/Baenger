@@ -42,9 +42,6 @@ class LoggedInActivity : AppCompatActivity() {
         spotifyname_textview.text = spotifyDisplayName
 
 
-        spotify_change_song.setOnClickListener{changeSong()}
-
-
         var playlistCheck = false;
         var baengerFound = false;
 
@@ -128,7 +125,9 @@ class LoggedInActivity : AppCompatActivity() {
     private fun connected() {
         // Then we will write some more code here.
 
-        spotifyAppRemote?.let {
+        //Commenting this out since it is currently unnecessary but we might need it later
+
+        /*spotifyAppRemote?.let {
             // Play a playlist
             val playlistURI = "spotify:playlist:$playlistID"
             it.playerApi.play(playlistURI)
@@ -139,7 +138,7 @@ class LoggedInActivity : AppCompatActivity() {
             }
         }
         Log.d("LoggedInActivity", "MUSIC SHOULD START PLAYING")
-        Log.d("LoggedInActivity", "spotify:playlist$playlistID")
+        Log.d("LoggedInActivity", "spotify:playlist$playlistID")*/
 
     }
 
@@ -149,10 +148,6 @@ class LoggedInActivity : AppCompatActivity() {
             SpotifyAppRemote.disconnect(it)
         }
         // Aaand we will finish off here.
-    }
-
-    private fun changeSong() {
-        spotifyAppRemote?.playerApi?.skipNext()
     }
 
     private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {

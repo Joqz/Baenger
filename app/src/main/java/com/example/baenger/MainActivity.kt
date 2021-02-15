@@ -18,7 +18,6 @@ import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HttpsURLConnection
 
-
 class MainActivity : AppCompatActivity() {
 
     var id = ""
