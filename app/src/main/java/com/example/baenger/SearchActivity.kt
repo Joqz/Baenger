@@ -26,7 +26,7 @@ class SearchActivity : AppCompatActivity(){
         supportActionBar?.hide()
 
 
-        spotifyname_textview.text = spotifyDisplayName
+        //spotifyname_textview.text = spotifyDisplayName
     }
 
 
