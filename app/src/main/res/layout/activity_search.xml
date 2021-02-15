@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/yellow"
+        android:background="@drawable/navbar_background"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
         app:menu="@menu/nav_menu" />
