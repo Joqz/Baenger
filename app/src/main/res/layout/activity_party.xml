@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".LoggedInActivity">
+
+    <TextView
+        android:id="@+id/spotifyname_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/nunito"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.032" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:background="@drawable/gradient_background"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/toggle_partymode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":D"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.612" />
+
+    <TextView
+        android:id="@+id/logo_textview"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/nunito"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/yellow"
+        android:shadowColor="@color/middle_yellow"
+        android:shadowRadius="10"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.257" />
+
+    <TextView
+        android:id="@+id/create_playlist_info"
+        android:layout_width="280dp"
+        android:layout_height="120dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/nunito"
+        android:gravity="center"
+        android:text="@string/party_mode_info"
+        android:textColor="@color/yellow"
+        android:shadowColor="@color/middle_yellow"
+        android:shadowRadius="10"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.448" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

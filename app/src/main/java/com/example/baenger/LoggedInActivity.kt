@@ -1,13 +1,12 @@
 package com.example.baenger
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import com.spotify.protocol.types.Track
 import kotlinx.android.synthetic.main.activity_loggedin.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,8 +21,11 @@ import javax.net.ssl.HttpsURLConnection
 
 class LoggedInActivity : AppCompatActivity() {
 
-    private var spotifyAppRemote: SpotifyAppRemote? = null
     private var playlistID: String? = null
+    private var user: UserDetails? = null
+
+    var playlistCheck = false;
+    var baengerFound = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val spotifyId = intent.getStringExtra("spotify_id")
@@ -40,10 +42,6 @@ class LoggedInActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         spotifyname_textview.text = spotifyDisplayName
-
-
-        var playlistCheck = false;
-        var baengerFound = false;
 
         //CHECKING FOR THE BAENGER PLAYLIST
 
@@ -83,8 +81,10 @@ class LoggedInActivity : AppCompatActivity() {
                 }
                 playlistCheck = true;
 
-                if(playlistCheck && !baengerFound){
+                if(playlistCheck && baengerFound){
+                    user = UserDetails(spotifyAccessToken, spotifyId, spotifyDisplayName, playlistID)
                     //CHANGE ACTIVITY HERE!!
+                    changeActivity()
                 }
                 if(playlistCheck && !baengerFound){
                     spotify_create_playlist.setOnClickListener {createPlaylist(spotifyAccessToken, spotifyId)}
@@ -92,34 +92,6 @@ class LoggedInActivity : AppCompatActivity() {
 
             }
         }
-    }
-
-    override fun onStart(){
-        super.onStart()
-        connectToSpotify()
-    }
-
-
-    private fun connectToSpotify() {
-
-        val connectionParams = ConnectionParams.Builder(SpotifyConstants.CLIENT_ID)
-            .setRedirectUri(SpotifyConstants.REDIRECT_URI)
-            .showAuthView(true)
-            .build()
-
-        SpotifyAppRemote.connect(this, connectionParams, object : Connector.ConnectionListener {
-            override fun onConnected(appRemote: SpotifyAppRemote) {
-                spotifyAppRemote = appRemote
-                Log.d("LoggedInActivity", "Connected! Yay!")
-                // Now you can start interacting with App Remote
-                connected()
-            }
-
-            override fun onFailure(throwable: Throwable) {
-                Log.e("LoggedInActivity", throwable.message, throwable)
-                // Something went wrong when attempting to connect! Handle errors here
-            }
-        })
     }
 
     private fun connected() {
@@ -140,14 +112,6 @@ class LoggedInActivity : AppCompatActivity() {
         Log.d("LoggedInActivity", "MUSIC SHOULD START PLAYING")
         Log.d("LoggedInActivity", "spotify:playlist$playlistID")*/
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        spotifyAppRemote?.let {
-            SpotifyAppRemote.disconnect(it)
-        }
-        // Aaand we will finish off here.
     }
 
     private fun createPlaylist(spotifyAccessToken: String?, spotifyId: String?) {
@@ -176,5 +140,11 @@ class LoggedInActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(response)
             }
         }
+    }
+
+    private fun changeActivity() {
+        val userIntent = Intent(this@LoggedInActivity, PartyActivity::class.java)
+        userIntent.putExtra("userIntent", user)
+        startActivity(userIntent)
     }
 }

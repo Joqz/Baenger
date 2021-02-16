@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
         if (sharedPreferences.getLong("ExpiredDate", -1) > System.currentTimeMillis()) {
             fetchSpotifyUserProfile(preferencesToken)
+            Log.d("Token expires in", sharedPreferences.getLong("ExpiredDate", -1).toString())
         } else {
             val editor: Editor = sharedPreferences.edit()
             editor.clear()
