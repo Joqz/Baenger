@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="ic_search"
+        android:id="@+id/ic_search"
         android:icon="@drawable/navbar_search"
         android:title="Search"/>
 
     <item
-        android:id="ic_play"
+        android:id="@+id/ic_play"
         android:icon="@drawable/navbar_play"
         android:title="Play"/>
 
     <item
-        android:id="ic_partymode"
+        android:id="@+id/ic_partymode"
         android:icon="@drawable/navbar_partymode"
         android:title="Party"/>
 
