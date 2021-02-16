@@ -61,14 +61,16 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/search_button"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="47dp"
         android:background="@drawable/yellowborder_button"
         android:drawableRight="@drawable/ic_baseline_search_24"
         android:fontFamily="@font/nunito"
         android:text="Search for a song"
+        android:paddingLeft="40dp"
+        android:paddingRight="10dp"
         android:textColor="#FCFF07"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
