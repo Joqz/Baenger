@@ -79,7 +79,6 @@ class LoggedInActivity : AppCompatActivity() {
                     if (playlistName == "Baenger"){
                         baengerFound = true;
                         playlistID = item.getString("id")
-                        openSearchActivity()
                         Log.i("Status: ", "BAENGER PLAYLIST FOUND, NOTHING SHOULD HAPPEN")
                     }
                 }
@@ -91,6 +90,11 @@ class LoggedInActivity : AppCompatActivity() {
                 if(playlistCheck && !baengerFound){
                     spotify_create_playlist.setOnClickListener {createPlaylist(spotifyAccessToken, spotifyId)}
                 }
+                if(playlistCheck && baengerFound)
+                {
+                    openSearchActivity()
+                }
+
 
             }
         }
@@ -99,6 +103,7 @@ class LoggedInActivity : AppCompatActivity() {
     override fun onStart(){
         super.onStart()
         connectToSpotify()
+        Log.d("ayeelmaoo", "lmaooooo")
     }
 
 
