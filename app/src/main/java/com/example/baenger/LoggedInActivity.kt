@@ -86,19 +86,19 @@ class LoggedInActivity : AppCompatActivity() {
                 if(playlistCheck && !baengerFound){
                     //CHANGE ACTIVITY HERE!!
                 }
-                if(playlistCheck && baengerFound){
-
-                    //unnecessary check later on, just for testing rn
-                    connectToSpotify()
+                if(playlistCheck && !baengerFound){
+                    spotify_create_playlist.setOnClickListener {createPlaylist(spotifyAccessToken, spotifyId)}
                 }
 
             }
         }
-
-        if(playlistCheck && !baengerFound){
-            spotify_create_playlist.setOnClickListener {createPlaylist(spotifyAccessToken, spotifyId)}
-        }
     }
+
+    override fun onStart(){
+        super.onStart()
+        connectToSpotify()
+    }
+
 
     private fun connectToSpotify() {
 
