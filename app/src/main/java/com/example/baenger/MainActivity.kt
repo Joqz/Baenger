@@ -1,9 +1,10 @@
 package com.example.baenger
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.HttpsURLConnection
 
 class MainActivity : AppCompatActivity() {
@@ -24,17 +26,28 @@ class MainActivity : AppCompatActivity() {
     var avatar = ""
     var accessToken = ""
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
+        val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+        val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
+        if (sharedPreferences.getLong("ExpiredDate", -1) > System.currentTimeMillis()) {
+            fetchSpotifyUserProfile(preferencesToken)
+        } else {
+            val editor: Editor = sharedPreferences.edit()
+            editor.clear()
+            editor.apply()
+        }
+        
         spotify_login_btn.setOnClickListener {
             val request = getAuthenticationRequest(AuthenticationResponse.Type.TOKEN)
             AuthenticationClient.openLoginActivity(
-                this,
-                SpotifyConstants.AUTH_TOKEN_REQUEST_CODE,
-                request
+                    this,
+                    SpotifyConstants.AUTH_TOKEN_REQUEST_CODE,
+                    request
             )
         }
 
@@ -43,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     private fun getAuthenticationRequest(type: AuthenticationResponse.Type): AuthenticationRequest {
         return AuthenticationRequest.Builder(SpotifyConstants.CLIENT_ID, type, SpotifyConstants.REDIRECT_URI)
             .setShowDialog(false)
-            .setScopes(arrayOf("user-read-email", "playlist-modify-public", "playlist-modify-private"))
+            .setScopes(arrayOf("user-read-email", "playlist-modify-public", "playlist-modify-private", "app-remote-control"))
             .build()
     }
 
@@ -104,6 +117,12 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d("Spotify AccessToken :", token)
                 accessToken = token
+
+                val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("SpotifyToken", token)
+                editor.putLong("ExpiredDate", System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(59));
+                editor.apply()
 
                 openLoggedInActivity()
             }
