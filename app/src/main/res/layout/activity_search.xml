@@ -17,7 +17,6 @@
         app:itemTextColor="@color/black"
         app:menu="@menu/nav_menu" />
 
-
     <TextView
         android:id="@+id/spotifyname_textview"
         android:layout_width="wrap_content"
@@ -33,11 +32,39 @@
         app:layout_constraintVertical_bias="0.032" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@drawable/gradient_background"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/search_button"
+        android:layout_width="300dp"
+        android:layout_height="47dp"
+        android:background="@drawable/yellowborder_button"
+        android:drawableRight="@drawable/ic_baseline_search_24"
+        android:fontFamily="@font/nunito"
+        android:layout_margin="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="10dp"
+        android:text="Search for a song"
+        android:textAlignment="center"
+        android:textColor="#FCFF07"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.140" />
+
+    <ListView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/yellowborder_button"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_button"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navbar"/>
+
 
     <TextView
         android:id="@+id/logo_textview"
@@ -59,22 +86,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/search_button"
-        android:layout_width="300dp"
-        android:layout_height="47dp"
-        android:background="@drawable/yellowborder_button"
-        android:drawableRight="@drawable/ic_baseline_search_24"
-        android:fontFamily="@font/nunito"
-        android:text="Search for a song"
-        android:paddingLeft="40dp"
-        android:paddingRight="10dp"
-        android:textColor="#FCFF07"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.206" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

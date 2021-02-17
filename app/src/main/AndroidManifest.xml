@@ -13,12 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Baenger">
-        <activity android:name=".SearchActivity"/>
-        <activity android:name=".LoggedInActivity"/>
+        <activity android:name=".SearchActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">/>
+        <activity android:name=".LoggedInActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation" />
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
