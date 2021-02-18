@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/ic_search"
+        android:id="@+id/search"
+        android:title="Search"
         android:icon="@drawable/navbar_search"
-        android:title="Search"/>
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />
 
     <item
-        android:id="@+id/ic_play"
-        android:icon="@drawable/navbar_play"
-        android:title="Play"/>
+        android:id="@+id/play"
+        android:title="Play"
+        android:icon="@drawable/navbar_play" />
 
     <item
-        android:id="@+id/ic_partymode"
-        android:icon="@drawable/navbar_partymode"
-        android:title="Party"/>
+        android:id="@+id/partymode"
+        android:title="Party"
+        android:icon="@drawable/navbar_partymode"/>
 
 </menu>
