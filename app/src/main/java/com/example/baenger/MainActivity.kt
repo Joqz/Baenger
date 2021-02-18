@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     var avatar = ""
     var accessToken = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,8 +34,10 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
         val preferencesToken = sharedPreferences.getString("SpotifyToken", "")
         if (sharedPreferences.getLong("ExpiredDate", -1) > System.currentTimeMillis()) {
-            fetchSpotifyUserProfile(preferencesToken)
+            fetchSpotifyUserProfile(preferencesToken, true)
+            Log.d("TOKEN", "OLDTOKEN")
             Log.d("Token expires in", sharedPreferences.getLong("ExpiredDate", -1).toString())
+            Log.d("Current time", System.currentTimeMillis().toString())
         } else {
             val editor: Editor = sharedPreferences.edit()
             editor.clear()
@@ -66,11 +67,12 @@ class MainActivity : AppCompatActivity() {
         if (SpotifyConstants.AUTH_TOKEN_REQUEST_CODE == requestCode) {
             val response = AuthenticationClient.getResponse(resultCode, data)
             val accessToken: String? = response.accessToken
-            fetchSpotifyUserProfile(accessToken)
+            Log.d("RESPONSE", response.toString())
+            fetchSpotifyUserProfile(accessToken, false)
         }
     }
 
-    private fun fetchSpotifyUserProfile(token: String?) {
+    private fun fetchSpotifyUserProfile(token: String?, preferencesUsed: Boolean?) {
         Log.d("Status: ", "Please Wait...")
         if (token == null) {
             Log.i("Status: ", "Something went wrong - No Access Token found")
@@ -90,6 +92,8 @@ class MainActivity : AppCompatActivity() {
                 .use { it.readText() }  // defaults to UTF-8
             withContext(Dispatchers.Main) {
                 val jsonObject = JSONObject(response)
+
+                //Log.d("JSON", jsonObject.toString())
 
                 // Spotify Id
                 val spotifyId = jsonObject.getString("id")
@@ -119,11 +123,16 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Spotify AccessToken :", token)
                 accessToken = token
 
-                val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("SpotifyToken", token)
-                editor.putLong("ExpiredDate", System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(59));
-                editor.apply()
+                if(preferencesUsed == false){
+                    val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("SpotifyToken", token)
+                    val expiredDate = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(59)
+                    editor.putLong("ExpiredDate", System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(59))
+                    Log.d("TOKEN", "NEWTOKEN")
+                    Log.d("CREATED TOKEN EXPIRES", expiredDate.toString())
+                    editor.apply()
+                }
 
                 openLoggedInActivity()
             }

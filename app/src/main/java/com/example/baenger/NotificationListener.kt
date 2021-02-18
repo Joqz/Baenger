@@ -10,10 +10,7 @@ import com.example.baenger.NotificationListener.InterceptedNotificationCode
 class NotificationListener: NotificationListenerService()  {
 
     object InterceptedNotificationCode {
-        public var separatedID : String? = null
-        const val WHATSAPP_CODE = 2
-        const val INSTAGRAM_CODE = 3
-        const val OTHER_NOTIFICATIONS_CODE = 4 // We ignore all notification with code == 4
+        var separatedID : String? = null
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
@@ -37,7 +34,7 @@ class NotificationListener: NotificationListenerService()  {
                 "https://open.spotify.com/track/").substringBefore("?si=")
             Log.d("SONG ID", InterceptedNotificationCode.separatedID!!)
 
-            val intent = Intent("test")
+            val intent = Intent("SongID Broadcast")
             intent.putExtra("SongID", InterceptedNotificationCode.separatedID)
             sendBroadcast(intent)
             Log.d("broadcast sent", intent.toString())

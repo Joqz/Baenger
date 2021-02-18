@@ -12,6 +12,7 @@ import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
 import kotlinx.android.synthetic.main.activity_party.*
+import java.util.ArrayList
 
 
 class PartyActivity : AppCompatActivity() {
@@ -27,6 +28,11 @@ class PartyActivity : AppCompatActivity() {
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
     private var notificationIntent: Intent? = null
+
+    private var receiverRegistered: Boolean = false
+
+    private var songsInQueue = ArrayList<String>()
+    private var currentlyPlaying: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,17 +60,15 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    /*override fun onStart(){
-        super.onStart()
-        connectToSpotify()
-    }*/
-
     override fun onDestroy() {
         super.onDestroy()
         spotifyAppRemote?.let {
             SpotifyAppRemote.disconnect(it)
         }
-        unregisterReceiver(SongReceiver)
+        if (receiverRegistered) {
+            unregisterReceiver(SongReceiver)
+            receiverRegistered = false
+        }
         // Aaand we will finish off here.
     }
 
@@ -99,6 +103,7 @@ class PartyActivity : AppCompatActivity() {
         }
 
         unregisterReceiver(SongReceiver)
+        receiverRegistered = false
     }
 
     private fun start(){
@@ -109,11 +114,23 @@ class PartyActivity : AppCompatActivity() {
 
             it.playerApi.subscribeToPlayerState().setEventCallback {
                 val track: Track = it.track
+                currentlyPlaying = track.uri
+
+                Log.d("CURRENTLY", "Changing")
+                if(songsInQueue.contains(track.uri)){
+                    songsInQueue.remove(track.uri)
+                    Log.d("STARTED", "started playing from queue, removed song")
+                }
+
+
                 Log.d("MUSIC THAT IS PLAYING", track.name + " by " + track.artist.name)
+                Log.d("SongURI", track.uri)
+
+
             }
         }
         Log.d("LoggedInActivity", "MUSIC SHOULD START PLAYING")
-        Log.d("LoggedInActivity", "spotify:playlist$playlistID")
+        Log.d("LoggedInActivity", "spotify:playlist:$playlistID")
 
         if(!isNotificationServiceEnabled()){
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
@@ -124,21 +141,14 @@ class PartyActivity : AppCompatActivity() {
             startService(intent)
         }
 
-        /*receiver = BroadCastReceiver()
-
-        val filter = IntentFilter()
-        filter.addAction("test")
-        registerReceiver(receiver, filter)
-        Log.d("registerReceiver", "yes")*/
-
         fun getIntentFilter(): IntentFilter {
-            val iFilter = IntentFilter()
-            iFilter.addAction("test")
-            return iFilter
+            val intentFilter = IntentFilter()
+            intentFilter.addAction("SongID Broadcast")
+            return intentFilter
         }
 
         registerReceiver(SongReceiver, getIntentFilter())
-
+        receiverRegistered = true
     }
 
     private fun isNotificationServiceEnabled(): Boolean {
@@ -159,44 +169,50 @@ class PartyActivity : AppCompatActivity() {
         return false
     }
 
-    private fun buildNotificationServiceAlertDialog(): AlertDialog? {
+    private fun buildNotificationServiceAlertDialog(): AlertDialog {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("aNNA OikeuKSET")
         alertDialogBuilder.setMessage("tänne ne datat")
-        alertDialogBuilder.setPositiveButton("Yes") { dialog, id -> startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        alertDialogBuilder.setPositiveButton("Yes") { _, _ -> startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
-        alertDialogBuilder.setNegativeButton("No") { dialog, id ->
+        alertDialogBuilder.setNegativeButton("No") { _, _ ->
             // If you choose to not enable the notification listener
             // the app. will not work as expected
         }
         return alertDialogBuilder.create()
     }
 
-    /*private val broadCastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(contxt: Context?, intent: Intent?) {
-            Log.d("onReceive", "yes")
-            val receivedID = intent!!.getStringExtra("SongID")
-            if (receivedID != null) {
-                addSongToQueue(receivedID)
+    private fun checkIfSongExistsInQueue(songURI: String){
+
+        Log.d("QUEUE", songsInQueue.toString())
+
+        if(currentlyPlaying != songURI){
+            if(songsInQueue.contains(songURI)){
+                Log.d("NOPE", "cant add, in queue")
+            }
+            else{
+                Log.d("ADDING", songURI)
+                addSongToQueue(songURI)
             }
         }
-    }*/
+        else{
+            Log.d("PLAYING", "cant add, currently playing")
+        }
+    }
 
-    private fun addSongToQueue(receivedID: String) {
-        Log.d("addSongToQueue", "yes")
-        spotifyAppRemote?.playerApi?.play("spotify:track:$receivedID")
+    private fun addSongToQueue(songURI: String) {
+        songsInQueue.add(songURI)
+        spotifyAppRemote?.playerApi?.queue(songURI)
     }
 
     private val SongReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d("onReceive", "yes")
             val action = intent?.action
 
-            if (action == "test") {
+            if (action == "SongID Broadcast") {
                 val receivedID = intent.getStringExtra("SongID")
-                if (receivedID != null) {
-                    addSongToQueue(receivedID)
-                }
+                val songURI = "spotify:track:$receivedID"
+                checkIfSongExistsInQueue(songURI)
             }
         }
     }
