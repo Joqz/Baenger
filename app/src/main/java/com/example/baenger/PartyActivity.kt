@@ -2,15 +2,20 @@ package com.example.baenger
 
 import android.content.*
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.View.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
+import com.spotify.sdk.android.authentication.AuthenticationClient
+import com.spotify.sdk.android.authentication.AuthenticationResponse
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_party.*
 import java.util.ArrayList
 
@@ -52,11 +57,17 @@ class PartyActivity : AppCompatActivity() {
             if (isChecked){
                 //Switch Button is Checked
                 connectToSpotify()
+                spotify_clear_queue.visibility = VISIBLE
             }
             else{
                 //Switch Button is Unchecked
                 stop()
+                spotify_clear_queue.visibility = GONE
             }
+        }
+
+        spotify_clear_queue.setOnClickListener {
+            clearQueue(0)
         }
     }
 
@@ -169,6 +180,18 @@ class PartyActivity : AppCompatActivity() {
         return false
     }
 
+    private val SongReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+
+            if (action == "SongID Broadcast") {
+                val receivedID = intent.getStringExtra("SongID")
+                val songURI = "spotify:track:$receivedID"
+                checkIfSongExistsInQueue(songURI)
+            }
+        }
+    }
+
     private fun buildNotificationServiceAlertDialog(): AlertDialog {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("aNNA OikeuKSET")
@@ -205,15 +228,32 @@ class PartyActivity : AppCompatActivity() {
         spotifyAppRemote?.playerApi?.queue(songURI)
     }
 
-    private val SongReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val action = intent?.action
+    private fun clearQueue(i: Int){
+        val checkSong = "spotify:track:15SgAfCwXlyxMNPFgWkAlc"
 
-            if (action == "SongID Broadcast") {
-                val receivedID = intent.getStringExtra("SongID")
-                val songURI = "spotify:track:$receivedID"
-                checkIfSongExistsInQueue(songURI)
+        if(i == 0){
+            songsInQueue.clear()
+            Log.d("ARRAY", "cleared")
+
+            spotifyAppRemote?.playerApi?.queue(checkSong)
+            Log.d("TESTSONG", "added")
+        }
+
+        spotifyAppRemote?.playerApi?.skipNext()
+
+        if(currentlyPlaying == checkSong) {
+            Log.d("QUEUE", "cleared")
+            spotifyAppRemote?.playerApi?.skipNext()
+        }
+        else{
+            Log.d("QUEUE", "not clear")
+            spotifyAppRemote?.playerApi?.skipNext()
+            val handler = Handler()
+            val runnable = Runnable {
+                clearQueue(1)
             }
+
+            handler.postDelayed(runnable, 1000)
         }
     }
 
