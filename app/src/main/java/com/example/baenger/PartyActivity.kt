@@ -13,8 +13,6 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.Track
-import com.spotify.sdk.android.authentication.AuthenticationClient
-import com.spotify.sdk.android.authentication.AuthenticationResponse
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_party.*
 import java.util.ArrayList
@@ -38,6 +36,7 @@ class PartyActivity : AppCompatActivity() {
 
     private var songsInQueue = ArrayList<String>()
     private var currentlyPlaying: String? = null
+    private var queueCleared: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +56,12 @@ class PartyActivity : AppCompatActivity() {
             if (isChecked){
                 //Switch Button is Checked
                 connectToSpotify()
+
+                //move this into the if clause later
                 spotify_clear_queue.visibility = VISIBLE
+                if(songsInQueue.isNotEmpty()){
+
+                }
             }
             else{
                 //Switch Button is Unchecked
@@ -67,6 +71,7 @@ class PartyActivity : AppCompatActivity() {
         }
 
         spotify_clear_queue.setOnClickListener {
+            queueCleared = false
             clearQueue(0)
         }
     }
@@ -76,11 +81,11 @@ class PartyActivity : AppCompatActivity() {
         spotifyAppRemote?.let {
             SpotifyAppRemote.disconnect(it)
         }
+
         if (receiverRegistered) {
             unregisterReceiver(SongReceiver)
             receiverRegistered = false
         }
-        // Aaand we will finish off here.
     }
 
     private fun connectToSpotify() {
@@ -206,7 +211,6 @@ class PartyActivity : AppCompatActivity() {
     }
 
     private fun checkIfSongExistsInQueue(songURI: String){
-
         Log.d("QUEUE", songsInQueue.toString())
 
         if(currentlyPlaying != songURI){
@@ -215,7 +219,7 @@ class PartyActivity : AppCompatActivity() {
             }
             else{
                 Log.d("ADDING", songURI)
-                addSongToQueue(songURI)
+                addToQueue(songURI)
             }
         }
         else{
@@ -223,7 +227,7 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    private fun addSongToQueue(songURI: String) {
+    private fun addToQueue(songURI: String) {
         songsInQueue.add(songURI)
         spotifyAppRemote?.playerApi?.queue(songURI)
     }
@@ -232,20 +236,19 @@ class PartyActivity : AppCompatActivity() {
         val checkSong = "spotify:track:15SgAfCwXlyxMNPFgWkAlc"
 
         if(i == 0){
+            queueCleared = false
             songsInQueue.clear()
             Log.d("ARRAY", "cleared")
 
             spotifyAppRemote?.playerApi?.queue(checkSong)
             Log.d("TESTSONG", "added")
         }
-
-        spotifyAppRemote?.playerApi?.skipNext()
-
         if(currentlyPlaying == checkSong) {
             Log.d("QUEUE", "cleared")
+            queueCleared = true
             spotifyAppRemote?.playerApi?.skipNext()
         }
-        else{
+        if(!queueCleared){
             Log.d("QUEUE", "not clear")
             spotifyAppRemote?.playerApi?.skipNext()
             val handler = Handler()
