@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -178,7 +179,12 @@ class PartyActivity : AppCompatActivity() {
 
 
                 Log.d("MUSIC THAT IS PLAYING", track.name + " by " + track.artist.name)
+                Log.d("IMAGEURI", track.imageUri.toString())
                 Log.d("SongURI", track.uri)
+
+                Glide.with(this).load("https://i.scdn.co/image/" + track.imageUri.toString().substring(22, track.imageUri.toString().length - 2)).into(imageview)
+                trackname.text = track.name
+                artist.text = track.artist.name
 
 
             }
