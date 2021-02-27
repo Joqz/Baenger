@@ -7,12 +7,14 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.View.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
 import kotlinx.android.synthetic.main.activity_loggedin.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -80,20 +82,33 @@ class PartyActivity : AppCompatActivity() {
 
         spotifyname_textview.text = username
 
+        playButton.setOnClickListener {
+            PlayerStateControl.resume()
+
+        }
+
+        pauseButton.setOnClickListener {
+            PlayerStateControl.pause()
+        }
+
+        skipButton.setOnClickListener {
+            PlayerStateControl.skipNext()
+        }
+
+
         toggle_partymode.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
+            if (isChecked) {
                 //Switch Button is Checked
                 connectToSpotify()
                 getPlaylist()
 
                 spotify_clear_queue.visibility = VISIBLE
-            }
-            else{
+            } else {
                 //Switch Button is Unchecked
                 stop()
                 spotify_clear_queue.visibility = INVISIBLE
 
-                if (!emptyCheck(allSongs)){
+                if (!emptyCheck(allSongs)) {
                     playlistDialog = buildPlaylistAlertDialog()
                     playlistDialog?.show()
                 }
@@ -160,7 +175,7 @@ class PartyActivity : AppCompatActivity() {
     }
 
     //Start the Party Mode
-    private fun start(){
+    private fun start() {
 
         spotifyAppRemote?.let {
             // Play a playlist
@@ -172,7 +187,7 @@ class PartyActivity : AppCompatActivity() {
                 currentlyPlaying = track.uri
 
                 Log.d("CURRENTLY", "Changing")
-                if(songsInQueue.contains(track.uri)){
+                if (songsInQueue.contains(track.uri)) {
                     songsInQueue.remove(track.uri)
                     Log.d("STARTED", "started playing from queue, removed song")
                 }
@@ -192,7 +207,7 @@ class PartyActivity : AppCompatActivity() {
         Log.d("LoggedInActivity", "MUSIC SHOULD START PLAYING")
         Log.d("LoggedInActivity", "spotify:playlist:$playlistID")
 
-        if(!isNotificationServiceEnabled()){
+        if (!isNotificationServiceEnabled()) {
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog?.show();
         }
@@ -244,19 +259,17 @@ class PartyActivity : AppCompatActivity() {
     }
 
     //Checking if the song is already in the queue
-    private fun checkQueue(songURI: String){
+    private fun checkQueue(songURI: String) {
         Log.d("QUEUE", songsInQueue.toString())
 
-        if(currentlyPlaying != songURI){
-            if(songsInQueue.contains(songURI)){
+        if (currentlyPlaying != songURI) {
+            if (songsInQueue.contains(songURI)) {
                 Log.d("NOPE", "cant add, in queue")
-            }
-            else{
+            } else {
                 Log.d("ADDING", songURI)
                 addToQueue(songURI)
             }
-        }
-        else{
+        } else {
             Log.d("PLAYING", "cant add, currently playing")
         }
     }
@@ -266,8 +279,8 @@ class PartyActivity : AppCompatActivity() {
         songsInQueue.add(songURI)
         spotifyAppRemote?.playerApi?.queue(songURI)
 
-        if(!allSongs.contains(songURI)){
-            if(!songsInPlaylist.contains(songURI)){
+        if (!allSongs.contains(songURI)) {
+            if (!songsInPlaylist.contains(songURI)) {
                 allSongs.add("'" + songURI + "'")
                 Log.d("ALLSONGS", allSongs.toString())
             }
@@ -276,10 +289,10 @@ class PartyActivity : AppCompatActivity() {
     }
 
     //Clearing the queue by adding a song to the end of the queue and skipping songs until its reached
-    private fun clearQueue(i: Int){
+    private fun clearQueue(i: Int) {
         val checkSong = "spotify:track:15SgAfCwXlyxMNPFgWkAlc"
 
-        if(i == 0){
+        if (i == 0) {
             queueCleared = false
             songsInQueue.clear()
             Log.d("ARRAY", "cleared")
@@ -287,12 +300,12 @@ class PartyActivity : AppCompatActivity() {
             spotifyAppRemote?.playerApi?.queue(checkSong)
             Log.d("TESTSONG", "added")
         }
-        if(currentlyPlaying == checkSong) {
+        if (currentlyPlaying == checkSong) {
             Log.d("QUEUE", "cleared")
             queueCleared = true
             spotifyAppRemote?.playerApi?.skipNext()
         }
-        if(!queueCleared){
+        if (!queueCleared) {
             Log.d("QUEUE", "not clear")
             spotifyAppRemote?.playerApi?.skipNext()
             val handler = Handler()
@@ -304,7 +317,7 @@ class PartyActivity : AppCompatActivity() {
         }
     }
 
-    private fun addToPlaylist(songs: ArrayList<String>){
+    private fun addToPlaylist(songs: ArrayList<String>) {
         //The songs should be filtered well enough earlier
 
         Log.d("ADDING", songs.toString())
@@ -329,8 +342,7 @@ class PartyActivity : AppCompatActivity() {
                 val os: OutputStream = httpsURLConnection.getOutputStream()
                 os.write(requestJson.toString().toByteArray())
                 os.close()
-            }
-            catch (e: FileNotFoundException){
+            } catch (e: FileNotFoundException) {
                 e.message?.let { Log.d("ERROR", it) }
             }
 
@@ -347,14 +359,14 @@ class PartyActivity : AppCompatActivity() {
 
     }
 
-    private fun getPlaylist(){
+    private fun getPlaylist() {
         val checkPlaylistURL = "https://api.spotify.com/v1/playlists/$playlistID"
 
         songsInPlaylist.clear()
 
         GlobalScope.launch(Dispatchers.Default) {
             val url = URL(checkPlaylistURL)
-            val httpsURLConnection = withContext(Dispatchers.IO) {url.openConnection() as HttpsURLConnection }
+            val httpsURLConnection = withContext(Dispatchers.IO) { url.openConnection() as HttpsURLConnection }
             httpsURLConnection.requestMethod = "GET"
             httpsURLConnection.setRequestProperty("Authorization", "Bearer $accessToken")
             httpsURLConnection.setRequestProperty("Accept", "application/json")
@@ -386,7 +398,8 @@ class PartyActivity : AppCompatActivity() {
         alertDialogBuilder.setTitle("Request to read your notifications")
         alertDialogBuilder.setMessage("We need to access your notifications to be able to activate " +
                 "party mode. Do you accept?")
-        alertDialogBuilder.setPositiveButton("Yes") { _, _ -> startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+            startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
         alertDialogBuilder.setNegativeButton("No") { _, _ ->
         }
@@ -399,15 +412,13 @@ class PartyActivity : AppCompatActivity() {
         alertDialogBuilder.setTitle("Want to add the songs to your playlist?")
         alertDialogBuilder.setMessage("By accepting, we will add the songs from this session" +
                 "to your Baenger playlist.")
-        alertDialogBuilder.setPositiveButton("Yes") { _, _ -> addToPlaylist(allSongs)
+        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+            addToPlaylist(allSongs)
         }
-        alertDialogBuilder.setNegativeButton("No") { _, _ -> allSongs.clear()
+        alertDialogBuilder.setNegativeButton("No") { _, _ ->
+            allSongs.clear()
         }
         return alertDialogBuilder.create()
     }
-
-
-
-
 
 }

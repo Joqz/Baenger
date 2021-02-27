@@ -35,7 +35,7 @@ import javax.net.ssl.HttpsURLConnection
 
 class PlayActivity : AppCompatActivity() {
 
-    /*private val ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners"
+    private val ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners"
     private val ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
 
     private var enableNotificationListenerAlertDialog: AlertDialog? = null
@@ -398,7 +398,7 @@ class PlayActivity : AppCompatActivity() {
         alertDialogBuilder.setNegativeButton("No") { _, _ -> allSongs.clear()
         }
         return alertDialogBuilder.create()
-    }*/
+    }
 
 
 

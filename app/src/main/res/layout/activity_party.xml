@@ -99,23 +99,23 @@
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/playButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="@drawable/ic_playarrow"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/pauseButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:background="@drawable/ic_pause"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/skipButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:background="@drawable/ic_skipnext"/>
     </LinearLayout>
 
@@ -124,6 +124,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="PartyMode  "
+        android:thumb="@drawable/sw_thumb"
+        app:track="@drawable/sw_track"
         app:layout_constraintTop_toBottomOf="@id/buttonview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +138,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/spotify_clear_queue"
         android:visibility="invisible"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="47dp"
         android:layout_centerInParent="true"
         android:background="@drawable/loginbutton"
@@ -141,6 +146,7 @@
         android:fontFamily="sans-serif"
         android:padding="8dp"
         android:text="Clear your queue"
+        android:textSize="18dp"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
