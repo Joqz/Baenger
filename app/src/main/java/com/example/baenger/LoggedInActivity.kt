@@ -140,6 +140,7 @@ class LoggedInActivity : AppCompatActivity() {
                 val jsonObject = JSONObject(response)
             }
         }
+        changeActivity()
     }
 
     private fun changeActivity() {
