@@ -79,6 +79,7 @@ class PartyActivity : AppCompatActivity() {
         notificationIntent = Intent(this@PartyActivity, NotificationListener::class.java)
 
         val user = intent.getParcelableExtra<UserDetails>("userIntent")
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         username = user?.username
         playlistID = user?.playlistID
@@ -111,22 +112,19 @@ class PartyActivity : AppCompatActivity() {
             clearQueue(0)
         }
         playButton.setOnClickListener {
-            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
             spotifyAppRemote?.playerApi?.resume()
             Log.d("ResumeButton", "Resumebutton pressed fam")
         }
 
         pauseButton.setOnClickListener {
-            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
             spotifyAppRemote?.playerApi?.pause()
             Log.d("Pausebutton", "Pausebutton pressed fam")
         }
 
         skipButton.setOnClickListener {
-            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
             spotifyAppRemote?.playerApi?.skipNext()
             Log.d("Skipbutton", "Skipbutton pressed fam")
         }
@@ -423,8 +421,6 @@ class PartyActivity : AppCompatActivity() {
 
     //Dialog to ask the user if they want to add songs to the playlist
     private fun buildPlaylistAlertDialog(): AlertDialog {
-        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Want to add the songs to your playlist?")
         alertDialogBuilder.setMessage("By accepting, we will add the songs from this session" +

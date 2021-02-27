@@ -116,6 +116,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/skipButton"
+            android:shadowColor="@color/white"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/ic_skipnext_selector"/>
