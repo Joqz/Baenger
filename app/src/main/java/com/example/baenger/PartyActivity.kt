@@ -63,6 +63,7 @@ class PartyActivity : AppCompatActivity() {
     var preferencesTimer: Long? = null
     var preferencesToken: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_party)
@@ -94,6 +95,7 @@ class PartyActivity : AppCompatActivity() {
         skipButton.setOnClickListener {
             PlayerStateControl.skipNext()
         }
+
 
 
         toggle_partymode.setOnCheckedChangeListener { _, isChecked ->
@@ -140,6 +142,7 @@ class PartyActivity : AppCompatActivity() {
 
     //Remote connect to Spotify app
     private fun connectToSpotify() {
+
         val connectionParams = ConnectionParams.Builder(SpotifyConstants.CLIENT_ID)
                 .setRedirectUri(SpotifyConstants.REDIRECT_URI)
                 .showAuthView(true)
@@ -197,7 +200,10 @@ class PartyActivity : AppCompatActivity() {
                 Log.d("IMAGEURI", track.imageUri.toString())
                 Log.d("SongURI", track.uri)
 
-                Glide.with(this).load("https://i.scdn.co/image/" + track.imageUri.toString().substring(22, track.imageUri.toString().length - 2)).into(imageview)
+                Glide.with(this)
+                        .load("https://i.scdn.co/image/" + track.imageUri.toString().substring(22, track.imageUri.toString().length - 2))
+                        .placeholder(R.drawable.spotify_icon)
+                        .into(imageview)
                 trackname.text = track.name
                 artist.text = track.artist.name
 
