@@ -99,22 +99,22 @@
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/play"
-            android:text="Play"
+            android:id="@+id/pausebutton"
+            android:background="@drawable/ic_baseline_pause_24"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/pause"
-            android:text="Pause"
+            android:id="@+id/playbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_play_arrow_24"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"/>
+            android:layout_marginRight="50dp" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/skip"
-            android:text="Skip"
+            android:id="@+id/skipbutton"
+            android:background="@drawable/ic_baseline_skip_next_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -132,7 +132,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/spotify_clear_queue"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_width="200dp"
         android:layout_height="47dp"
         android:layout_centerInParent="true"

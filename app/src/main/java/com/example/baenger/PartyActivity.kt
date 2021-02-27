@@ -91,7 +91,7 @@ class PartyActivity : AppCompatActivity() {
             else{
                 //Switch Button is Unchecked
                 stop()
-                spotify_clear_queue.visibility = GONE
+                spotify_clear_queue.visibility = INVISIBLE
 
                 if (!emptyCheck(allSongs)){
                     playlistDialog = buildPlaylistAlertDialog()
@@ -185,9 +185,32 @@ class PartyActivity : AppCompatActivity() {
                 Glide.with(this).load("https://i.scdn.co/image/" + track.imageUri.toString().substring(22, track.imageUri.toString().length - 2)).into(imageview)
                 trackname.text = track.name
                 artist.text = track.artist.name
-
-
             }
+
+            fun play(){
+                it.playerApi.resume()
+            }
+
+            fun pause(){
+                it.playerApi.pause()
+            }
+
+            fun skip(){
+                it.playerApi.skipNext()
+            }
+
+            playbutton.setOnClickListener {
+                play()
+            }
+
+            pausebutton.setOnClickListener {
+                pause()
+            }
+
+            skipbutton.setOnClickListener {
+                skip()
+            }
+
         }
         Log.d("LoggedInActivity", "MUSIC SHOULD START PLAYING")
         Log.d("LoggedInActivity", "spotify:playlist:$playlistID")
