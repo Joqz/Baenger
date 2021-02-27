@@ -83,21 +83,6 @@ class PartyActivity : AppCompatActivity() {
 
         spotifyname_textview.text = username
 
-        playButton.setOnClickListener {
-            PlayerStateControl.resume()
-
-        }
-
-        pauseButton.setOnClickListener {
-            PlayerStateControl.pause()
-        }
-
-        skipButton.setOnClickListener {
-            PlayerStateControl.skipNext()
-        }
-
-
-
         toggle_partymode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 //Switch Button is Checked
@@ -121,6 +106,20 @@ class PartyActivity : AppCompatActivity() {
         spotify_clear_queue.setOnClickListener {
             queueCleared = false
             clearQueue(0)
+        }
+        playButton.setOnClickListener {
+            spotifyAppRemote?.playerApi?.resume()
+            Log.d("ResumeButton", "Resumebutton pressed fam")
+        }
+
+        pauseButton.setOnClickListener {
+            spotifyAppRemote?.playerApi?.pause()
+            Log.d("Pausebutton", "Pausebutton pressed fam")
+        }
+
+        skipButton.setOnClickListener {
+            spotifyAppRemote?.playerApi?.skipNext()
+            Log.d("Skipbutton", "Skipbutton pressed fam")
         }
     }
 
