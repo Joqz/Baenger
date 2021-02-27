@@ -3,6 +3,8 @@ package com.example.baenger
 import android.content.*
 import android.os.Bundle
 import android.os.Handler
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -109,16 +111,22 @@ class PartyActivity : AppCompatActivity() {
             clearQueue(0)
         }
         playButton.setOnClickListener {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
             spotifyAppRemote?.playerApi?.resume()
             Log.d("ResumeButton", "Resumebutton pressed fam")
         }
 
         pauseButton.setOnClickListener {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
             spotifyAppRemote?.playerApi?.pause()
             Log.d("Pausebutton", "Pausebutton pressed fam")
         }
 
         skipButton.setOnClickListener {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.EFFECT_TICK))
             spotifyAppRemote?.playerApi?.skipNext()
             Log.d("Skipbutton", "Skipbutton pressed fam")
         }
@@ -165,9 +173,10 @@ class PartyActivity : AppCompatActivity() {
 
     //Disconnect from the Spotify app & notification listener
     private fun stop() {
-        spotifyAppRemote?.let {
+        //Uncommented disconnection spotify for now. User remains in control, but notifications are disabled.
+        /*spotifyAppRemote?.let {
             SpotifyAppRemote.disconnect(it)
-        }
+        }*/
 
         Intent(this, NotificationListener::class.java).also { intent ->
             stopService(intent)
@@ -414,6 +423,8 @@ class PartyActivity : AppCompatActivity() {
 
     //Dialog to ask the user if they want to add songs to the playlist
     private fun buildPlaylistAlertDialog(): AlertDialog {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Want to add the songs to your playlist?")
         alertDialogBuilder.setMessage("By accepting, we will add the songs from this session" +
