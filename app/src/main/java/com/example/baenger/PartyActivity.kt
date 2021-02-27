@@ -69,6 +69,7 @@ class PartyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_party)
         supportActionBar?.hide()
 
+
         val sharedPreferences = getSharedPreferences("BaengerPreferences", MODE_PRIVATE)
         preferencesTimer = sharedPreferences.getLong("ExpiredDate", -1)
         preferencesToken = sharedPreferences.getString("SpotifyToken", "")
